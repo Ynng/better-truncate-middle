@@ -1,6 +1,6 @@
 {
   "name": "better-truncate-middle",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Middle-ellipsis polyfill that measures rendered text and keeps the original string in the DOM for find, copy, and accessibility.",
   "license": "MIT",
   "author": "ynng",
@@ -12,7 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/ynng/better-truncate-middle.git"
   },
-  "homepage": "https://github.com/ynng/better-truncate-middle#readme",
+  "homepage": "https://better-truncate-middle.vercel.app",
   "bugs": {
     "url": "https://github.com/ynng/better-truncate-middle/issues"
   },
