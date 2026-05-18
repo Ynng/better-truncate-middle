@@ -28,38 +28,27 @@ npm install better-truncate-middle
 ```tsx
 import { MiddleTruncate } from 'better-truncate-middle/react';
 
-export function FileLabel() {
+export function BranchLabel() {
   return (
-    <MiddleTruncate style={{ maxWidth: 320 }} prefer="end">
-      20260509071530_add_index_to_payment_reconciliation_events_on_organization_id_external_payment_provider_and_external_payment_id
-    </MiddleTruncate>
+    <div className="flex min-w-0 items-center gap-2 font-serif text-lg">
+      <span>branch</span>
+      <MiddleTruncate className="min-w-0 flex-1" prefer="end">
+        feature/really-long-flexible-middle-label-final-check
+      </MiddleTruncate>
+      <span>ready</span>
+    </div>
   );
 }
 ```
 
-That's it. Structural styles inject themselves on mount, so there is no CSS
-import to remember. Width, `min-width`, `max-width`, flex sizing, font, and
-resize are all read from the live element:
-
-```tsx
-<div className="flex min-w-0 items-center gap-2 font-serif text-lg">
-  <span>branch</span>
-  <MiddleTruncate className="min-w-0 flex-1" prefer="end">
-    feature/really-long-flexible-middle-label-final-check
-  </MiddleTruncate>
-  <span>ready</span>
-</div>
-```
-
-If you server-render, also import `better-truncate-middle/styles.css` so the
-server HTML paints with a safe one-line clip before hydration. Hydration is
-mismatch-free; the component sets `suppressHydrationWarning` on its subtree.
+If you server-render, also import `better-truncate-middle/styles.css` once in
+your app root.
 
 ## HTML
 
-For framework-agnostic use, add `data-middle-truncate` to any element and call
-`setupMiddleTruncatePolyfill` from your client entry. The polyfill scans for
-matching elements, enhances each one, and watches for new ones.
+Add `data-middle-truncate` to any element and call
+`setupMiddleTruncatePolyfill()` once. It enhances every match and watches
+for new ones.
 
 ```html
 <link rel="stylesheet" href="/better-truncate-middle/styles.css" />
@@ -76,10 +65,6 @@ import { setupMiddleTruncatePolyfill } from 'better-truncate-middle';
 setupMiddleTruncatePolyfill();
 ```
 
-Until the script runs, the CSS clips overflowing text with a native one-line
-end ellipsis so layout never breaks. Once it runs, every `[data-middle-truncate]`
-element switches to its measured middle split.
-
 For a single element you manage yourself:
 
 ```ts
@@ -93,10 +78,8 @@ const cleanup = mountMiddleTruncate(
 
 ## Render-blocking polyfill (correct first paint)
 
-By default, the measured split appears after your JS has run, so the first
-frame shows the end-clip fallback for a moment. To get the measured middle
-split on the very first paint, mount the pre-built bundle as a render-blocking
-script in `<head>`:
+To get the measured middle split on the very first frame, mount the pre-built
+bundle as a render-blocking script in `<head>`:
 
 ```html
 <head>
@@ -109,14 +92,10 @@ script in `<head>`:
 </head>
 ```
 
-`blocking="render"` makes the browser wait until the script has executed before
-painting. The polyfill scans the parsed DOM, writes the measured splits
-in-place, and the page paints already enhanced. `polyfill.global.js` is small,
-has no transitive dependencies, and can be served from your origin or a CDN
-such as `https://unpkg.com/better-truncate-middle/dist/polyfill.global.js`.
-
-In a server-rendered React app, the same script enhances the SSR markup before
-hydration; React then picks up the already-enhanced DOM.
+`blocking="render"` makes the browser wait until the script has run before
+painting. `polyfill.global.js` is small, has no dependencies, and works the
+same way against SSR React markup before hydration. Serve it from your origin
+or `https://unpkg.com/better-truncate-middle/dist/polyfill.global.js`.
 
 ## Options
 
