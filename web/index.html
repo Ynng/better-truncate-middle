@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Middle truncation that preserves the original text node for selection, find-in-page, copy, accessibility, and indexing."
+    />
+    <title>better-truncate-middle</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Inter:wght@400;500&family=Manrope:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    <script>
+      // Apply saved theme as early as possible to avoid a flash.
+      try {
+        const saved = localStorage.getItem('btm-theme');
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.dataset.theme = saved;
+        }
+      } catch {}
+    </script>
+
+    <link rel="stylesheet" href="./styles.css" />
+    <script
+      type="module"
+      src="./polyfill.ts"
+      blocking="render"
+      fetchpriority="high"
+    ></script>
+  </head>
+
+  <body>
+    <main class="page">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-name">better-truncate-middle</span>
+          <span class="brand-meta">v0.1.0</span>
+        </div>
+        <nav aria-label="Project links">
+          <button
+            type="button"
+            class="theme-toggle"
+            data-theme-toggle
+            aria-label="Toggle color theme"
+            title="Toggle theme"
+          >
+            <svg
+              class="theme-icon theme-icon-sun"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <circle cx="8" cy="8" r="3" />
+              <path d="M8 1.5V3" />
+              <path d="M8 13v1.5" />
+              <path d="M1.5 8H3" />
+              <path d="M13 8h1.5" />
+              <path d="M3.4 3.4l1 1" />
+              <path d="M11.6 11.6l1 1" />
+              <path d="M3.4 12.6l1-1" />
+              <path d="M11.6 4.4l1-1" />
+            </svg>
+            <svg
+              class="theme-icon theme-icon-moon"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M13 9.5A5.5 5.5 0 0 1 6.5 3a5.5 5.5 0 1 0 6.5 6.5z" />
+            </svg>
+          </button>
+          <a
+            href="https://www.npmjs.com/package/better-truncate-middle"
+            class="nav-link"
+            >npm</a
+          >
+          <a href="./stress.html" class="nav-link">examples</a>
+          <a
+            href="https://github.com/ynng/better-truncate-middle"
+            class="nav-link"
+            >GitHub <span aria-hidden="true">↗</span></a
+          >
+        </nav>
+      </header>
+
+      <section class="hero">
+        <p class="hero-statement">Middle ellipsis without losing the text.</p>
+        <p class="hero-lede">
+          A polyfill for
+          <a href="https://www.w3.org/wiki/Text-overflow_middle_cropping"
+            ><code>text-overflow-middle: ellipsis</code></a
+          >, the CSS proposal the browser never shipped. Pixel-accurate,
+          microsecond-fast, zero-config, and the full string stays in the DOM
+          for copy, find, and accessibility.
+        </p>
+      </section>
+
+      <section class="install-section" aria-label="Install">
+        <div class="install" data-install>
+          <div class="install-cmd-group">
+            <button
+              type="button"
+              class="install-cmd"
+              data-copy
+              aria-label="Click to copy install command"
+            >
+              <span class="install-prompt" aria-hidden="true">$</span>
+              <code data-cmd>npm install better-truncate-middle</code>
+              <span class="install-status" data-status>
+                <svg
+                  class="install-icon-copy"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  aria-hidden="true"
+                >
+                  <rect x="4.5" y="4.5" width="8" height="8" rx="1.5" />
+                  <path
+                    d="M4.5 10.5h-1A1.5 1.5 0 0 1 2 9V3.5A1.5 1.5 0 0 1 3.5 2H9A1.5 1.5 0 0 1 10.5 3.5v1"
+                  />
+                </svg>
+                <svg
+                  class="install-icon-done"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M3 8.5l3.2 3.2L13 5" />
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div class="install-tabs" role="tablist" aria-label="Package manager">
+            <button
+              type="button"
+              role="tab"
+              aria-selected="true"
+              data-pkg="npm"
+            >
+              npm
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected="false"
+              data-pkg="pnpm"
+            >
+              pnpm
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected="false"
+              data-pkg="bun"
+            >
+              bun
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected="false"
+              data-pkg="yarn"
+            >
+              yarn
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="demo-root" aria-label="Live demo"><!--ssr-demo--></section>
+
+      <section class="info-section" aria-labelledby="fit-title">
+        <div class="section-head">
+          <p class="section-kicker">Highlights</p>
+          <h2 id="fit-title">Pretext-powered. Zero configuration.</h2>
+          <p>
+            Every visible split comes from a real pixel measurement on
+            the real element. The rest of what's here is what you get
+            when that measurement is fast and reliable.
+          </p>
+        </div>
+
+        <ul class="feature-list">
+          <li>
+            <strong>Zero configuration.</strong>
+            No font argument, no width argument, no character count.
+            Give the element a width (or let it inherit one) and the
+            split appears.
+          </li>
+          <li>
+            <strong>Only the rendering is truncated.</strong>
+            The full string stays in the DOM as inline text, so
+            selection, copy, find-in-page, screen readers, and search
+            crawlers all see it, exactly as you wrote it.
+          </li>
+          <li>
+            <strong>Measured in pixels, not guessed.</strong>
+            A Pretext-backed measurement finds the largest visible start
+            and end that fit the current width. ~90µs per layout pass,
+            fast enough to rerun on every resize tick and font swap
+            without dropping a frame.
+          </li>
+        </ul>
+
+        <p class="examples-link">
+          The <a href="./stress.html">edge-case examples</a> cover flex
+          layouts, inherited fonts, CJK text, animated widths, missing
+          component classes, and proportional fonts.
+        </p>
+      </section>
+
+      <footer class="page-foot">
+        <p>MIT licensed.</p>
+      </footer>
+    </main>
+
+    <script type="module" src="./entry-client.tsx"></script>
+  </body>
+</html>

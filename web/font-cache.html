@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>better-truncate-middle font cache fixture</title>
+    <style>
+      @font-face {
+        font-family: 'DelayedWide';
+        src: url('/delayed-wide-font.ttf') format('truetype');
+        font-display: swap;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 40px;
+      }
+
+      #root {
+        width: 260px;
+      }
+
+      .font-cache-target {
+        display: block;
+        font-family: 'DelayedWide', 'Liberation Sans Narrow', sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./font-cache.tsx"></script>
+  </body>
+</html>

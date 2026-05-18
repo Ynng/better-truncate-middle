@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+web-dist/
+coverage/
+
+# Test and browser artifacts
+test-results/
+playwright-report/
+*.trace.zip
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Package artifacts
+*.tgz
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

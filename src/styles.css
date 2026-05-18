@@ -1,0 +1,27 @@
+:where(.pmt) {
+  display: inline-block;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  white-space: nowrap;
+}
+
+:where(.pmt__before),
+:where(.pmt__omitted),
+:where(.pmt__after) {
+  display: inline;
+}
+
+:where(.pmt__before[data-pmt-truncated="true"])::after {
+  content: "…";
+}
+
+:where(.pmt__omitted) {
+  color: transparent;
+  font-size: 0;
+  letter-spacing: 0;
+  word-spacing: 0;
+}

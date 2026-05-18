@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>better-truncate-middle edge-case examples</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap"
+    />
+
+    <script>
+      // Apply saved theme as early as possible to avoid a flash.
+      try {
+        const saved = localStorage.getItem('btm-theme');
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.dataset.theme = saved;
+        }
+      } catch {}
+    </script>
+
+    <link rel="stylesheet" href="./stress.css" />
+  </head>
+  <body>
+    <main class="stress-page" aria-labelledby="stress-title">
+      <header class="topbar">
+        <div class="brand">
+          <a class="brand-name" href="/">better-truncate-middle</a>
+          <span class="brand-meta">edge cases</span>
+        </div>
+        <nav aria-label="Project links">
+          <button
+            type="button"
+            class="theme-toggle"
+            data-theme-toggle
+            aria-label="Toggle color theme"
+            title="Toggle theme"
+          >
+            <svg
+              class="theme-icon theme-icon-sun"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <circle cx="8" cy="8" r="3" />
+              <path d="M8 1.5V3" />
+              <path d="M8 13v1.5" />
+              <path d="M1.5 8H3" />
+              <path d="M13 8h1.5" />
+              <path d="M3.4 3.4l1 1" />
+              <path d="M11.6 11.6l1 1" />
+              <path d="M3.4 12.6l1-1" />
+              <path d="M11.6 4.4l1-1" />
+            </svg>
+            <svg
+              class="theme-icon theme-icon-moon"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M13 9.5A5.5 5.5 0 0 1 6.5 3a5.5 5.5 0 1 0 6.5 6.5z" />
+            </svg>
+          </button>
+          <a href="/" class="nav-link">home</a>
+          <a
+            href="https://github.com/ynng/better-truncate-middle"
+            class="nav-link"
+            >GitHub <span aria-hidden="true">↗</span></a
+          >
+        </nav>
+      </header>
+
+      <section class="intro" aria-labelledby="stress-title">
+        <p class="section-kicker">Edge cases</p>
+        <h1 id="stress-title" class="hero-statement">
+          Layouts that break character-count truncation.
+        </h1>
+        <p class="hero-lede">
+          Each row exercises a layout or typography case that tends to trip
+          up middle-truncation by string slicing. The same fixtures are
+          covered by Playwright geometry checks.
+        </p>
+        <label class="balance-control">
+          <span>
+            Balance
+            <output id="balance-output" for="balance-control">0.35</output>
+          </span>
+          <input
+            id="balance-control"
+            aria-label="Global truncation balance"
+            type="range"
+            min="0"
+            max="1"
+            step="0.05"
+            value="0.35"
+          />
+          <small>
+            0 keeps more end text, 0.5 is centered, 1 keeps more start text.
+          </small>
+        </label>
+      </section>
+
+      <section id="fixtures" class="fixture-list" aria-label="Stress fixtures">
+        <article class="fixture" data-fixture="fixed">
+          <div class="fixture-copy">
+            <h2>Fixed parent width</h2>
+            <p>
+              The preview parent is user-resizable. The value fills that parent
+              so it does not shrink after truncation.
+            </p>
+            <pre><code>&lt;div className="w-[220px]"&gt;
+  &lt;MiddleTruncate className="w-full" balance={__BALANCE__}&gt;
+    portal-website/apps/web/src/components/...
+  &lt;/MiddleTruncate&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+          <div class="fixture-demo">
+            <label class="resize-control">
+              <span
+                >Preview width <output data-width-output>220px</output></span
+              >
+              <input
+                aria-label="Fixed parent width preview width"
+                data-width-control
+                type="range"
+                min="150"
+                max="460"
+                value="220"
+              />
+            </label>
+            <div
+              class="demo-resizer"
+              data-resize-target
+              data-label-prefix="parent"
+            >
+              <div class="constraint">
+                <span class="pmt fixture-value fill-value" data-truncate>
+                  portal-website/apps/web/src/components/background-composer/shared/review-diff-card.test.tsx
+                </span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="fixture" data-fixture="no-classname">
+          <div class="fixture-copy">
+            <h2>No component className</h2>
+            <p>
+              The parent is user-resizable, but the component gets no
+              <code>className</code>. Package CSS alone provides the inline
+              block and <code>max-width: 100%</code> behavior.
+            </p>
+            <pre><code>&lt;div className="w-[220px]"&gt;
+  &lt;MiddleTruncate balance={__BALANCE__}&gt;
+    packages/dashboard/src/routes/accounts/enterprise-contract-history-panel.tsx
+  &lt;/MiddleTruncate&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+          <div class="fixture-demo">
+            <label class="resize-control">
+              <span
+                >Preview width <output data-width-output>220px</output></span
+              >
+              <input
+                aria-label="No className preview width"
+                data-width-control
+                type="range"
+                min="150"
+                max="460"
+                value="220"
+              />
+            </label>
+            <div
+              class="demo-resizer bare-resizer"
+              data-resize-target
+              data-label-prefix="parent"
+            >
+              <div class="constraint">
+                <span class="pmt" data-truncate>
+                  packages/dashboard/src/routes/accounts/enterprise-contract-history-panel.tsx
+                </span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="fixture" data-fixture="element-font">
+          <div class="fixture-copy">
+            <h2>Tailwind-like classes on element</h2>
+            <p>
+              Font family, size, style, weight, and tracking are applied to the
+              truncating element itself.
+            </p>
+            <pre><code>&lt;MiddleTruncate
+  className="w-full font-serif text-xl font-bold italic tracking-wide"
+  balance={__BALANCE__}
+&gt;
+  ghu_4f2a8d93c17e406db86ad179a02f7c...
+&lt;/MiddleTruncate&gt;</code></pre>
+          </div>
+          <div class="fixture-demo">
+            <label class="resize-control">
+              <span
+                >Preview width <output data-width-output>220px</output></span
+              >
+              <input
+                aria-label="Element font preview width"
+                data-width-control
+                type="range"
+                min="150"
+                max="460"
+                value="220"
+              />
+            </label>
+            <div
+              class="demo-resizer"
+              data-resize-target
+              data-label-prefix="parent"
+            >
+              <div class="constraint">
+                <span
+                  class="pmt fixture-value fill-value font-serif text-xl font-bold italic tracking-wide"
+                  data-truncate
+                >
+                  ghu_4f2a8d93c17e406db86ad179a02f7c67494ee2fc_scoped_repo_read_write_session_2026_05_07_02_41_19Z
+                </span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="fixture" data-fixture="parent-font">
+          <div class="fixture-copy">
+            <h2>Tailwind-like classes on parent</h2>
+            <p>
+              The value inherits typography from a parent. The helper measures
+              the computed font on the actual element.
+            </p>
+            <pre><code>&lt;div className="w-[220px] font-serif text-xl font-bold italic"&gt;
+  &lt;MiddleTruncate className="w-full" balance={__BALANCE__}&gt;
+    release-candidate/customer-billing-dashboard...
+  &lt;/MiddleTruncate&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+          <div class="fixture-demo">
+            <label class="resize-control">
+              <span
+                >Preview width <output data-width-output>220px</output></span
+              >
+              <input
+                aria-label="Parent font preview width"
+                data-width-control
+                type="range"
+                min="150"
+                max="460"
+                value="220"
+              />
+            </label>
+            <div
+              class="demo-resizer font-serif text-xl font-bold italic"
+              data-resize-target
+              data-label-prefix="parent"
+            >
+              <div class="constraint">
+                <span class="pmt fixture-value fill-value" data-truncate>
+                  release-candidate/customer-billing-dashboard-reconciliation-report-2026-05-07.csv
+                </span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="fixture" data-fixture="cjk">
+          <div class="fixture-copy">
+            <h2>CJK text</h2>
+            <p>
+              Chinese and Japanese text is segmented by grapheme, not byte or
+              UTF-16 unit, so visible ends stay intact.
+            </p>
+            <pre><code>&lt;MiddleTruncate className="w-full" balance={__BALANCE__}&gt;
+  上海研发中心/プロダクト品質保証/長いファイル名と重要な末尾...
+&lt;/MiddleTruncate&gt;</code></pre>
+          </div>
+          <div class="fixture-demo">
+            <label class="resize-control">
+              <span
+                >Preview width <output data-width-output>220px</output></span
+              >
+              <input
+                aria-label="CJK preview width"
+                data-width-control
+                type="range"
+                min="150"
+                max="460"
+                value="220"
+              />
+            </label>
+            <div
+              class="demo-resizer cjk"
+              data-resize-target
+              data-label-prefix="parent"
+            >
+              <div class="constraint">
+                <span class="pmt fixture-value fill-value" data-truncate>
+                  上海研发中心/プロダクト品質保証/長いファイル名と重要な末尾-v2026-05-07.json
+                </span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="fixture" data-fixture="proportional">
+          <div class="fixture-copy">
+            <h2>Fancy proportional font</h2>
+            <p>
+              A bold italic serif font makes character counts useless. The
+              result must fit by rendered width.
+            </p>
+            <pre><code>&lt;div className="w-[220px] font-serif text-2xl italic font-bold"&gt;
+  &lt;MiddleTruncate className="w-full" balance={__BALANCE__}&gt;
+    Concise prose still needs both its opening clause...
+  &lt;/MiddleTruncate&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+          <div class="fixture-demo">
+            <label class="resize-control">
+              <span
+                >Preview width <output data-width-output>220px</output></span
+              >
+              <input
+                aria-label="Proportional font preview width"
+                data-width-control
+                type="range"
+                min="150"
+                max="460"
+                value="220"
+              />
+            </label>
+            <div
+              class="demo-resizer fancy-parent"
+              data-resize-target
+              data-label-prefix="parent"
+            >
+              <div class="constraint">
+                <span class="pmt fixture-value fill-value" data-truncate>
+                  Concise prose still needs both its opening clause and final
+                  reference visible.
+                </span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="fixture" data-fixture="flex">
+          <div class="fixture-copy">
+            <h2>Dynamic flex width</h2>
+            <p>
+              No explicit value width. The middle label is the flex item with
+              <code>flex: 1</code>.
+            </p>
+            <pre><code>&lt;div className="flex items-center gap-2"&gt;
+  &lt;span&gt;branch&lt;/span&gt;
+  &lt;MiddleTruncate className="min-w-0 flex-1" balance={__BALANCE__}&gt;
+    feature/really-long-flexible-middle-label...
+  &lt;/MiddleTruncate&gt;
+  &lt;span&gt;ready&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+          <div class="fixture-demo">
+            <label class="resize-control">
+              <span
+                >Preview width <output data-width-output>620px</output></span
+              >
+              <input
+                aria-label="Flex preview width"
+                data-width-control
+                type="range"
+                min="260"
+                max="720"
+                value="620"
+              />
+            </label>
+            <div
+              class="demo-resizer"
+              data-resize-target
+              data-label-prefix="flex parent"
+            >
+              <div id="resize-fixture" class="resize-frame">
+                <span class="prefix">branch</span>
+                <span class="pmt fixture-value flex-value" data-truncate>
+                  feature/really-long-flexible-middle-label-that-should-grow-and-shrink-with-the-row-final-check
+                </span>
+                <span class="suffix">ready</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="fixture" data-fixture="animated">
+          <div class="fixture-copy">
+            <h2>CSS animated parent width</h2>
+            <p>
+              The parent width changes continuously with CSS animation. The
+              truncation should update like native <code>text-overflow</code>,
+              without feeding its previous text width back into layout.
+            </p>
+            <pre><code>&lt;div className="animate-width overflow-hidden"&gt;
+  &lt;MiddleTruncate className="w-full" balance={__BALANCE__}&gt;
+    animation/canary/routes/live-width-contract-regression-check.tsx
+  &lt;/MiddleTruncate&gt;
+&lt;/div&gt;</code></pre>
+          </div>
+          <div class="fixture-demo">
+            <label class="resize-control">
+              <span>Max width <output data-width-output>560px</output></span>
+              <input
+                aria-label="Animated parent max width"
+                data-width-control
+                type="range"
+                min="320"
+                max="720"
+                value="560"
+              />
+            </label>
+            <div
+              class="demo-resizer animated-resizer"
+              data-animated-resize
+              data-resize-target
+              data-label-prefix="animated parent"
+            >
+              <div class="constraint">
+                <span class="pmt fixture-value fill-value" data-truncate>
+                  animation/canary/routes/live-width-contract-regression-check.tsx
+                </span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="fixture" data-fixture="implicit">
+          <div class="fixture-copy">
+            <h2>Maximum implicitness</h2>
+            <p>
+              No width or max-width on the value or its immediate parent. The
+              text receives only <code>min-width: 0</code> and
+              <code>flex: 1</code>; available space comes from layout.
+            </p>
+            <pre><code>&lt;section className="grid grid-cols-[auto_minmax(0,1fr)] gap-3"&gt;
+  &lt;aside&gt;repo&lt;/aside&gt;
+  &lt;div className="flex min-w-0 items-center gap-2"&gt;
+    &lt;span&gt;active&lt;/span&gt;
+    &lt;MiddleTruncate className="min-w-0 flex-1" balance={__BALANCE__}&gt;
+      org/product/platform/packages/client/src/routes/settings/billing...
+    &lt;/MiddleTruncate&gt;
+    &lt;button&gt;copy&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+          </div>
+          <div class="fixture-demo">
+            <label class="resize-control">
+              <span
+                >Harness width <output data-width-output>540px</output></span
+              >
+              <input
+                aria-label="Implicit layout harness width"
+                data-width-control
+                type="range"
+                min="300"
+                max="760"
+                value="540"
+              />
+            </label>
+            <div
+              class="demo-resizer"
+              data-resize-target
+              data-label-prefix="test harness"
+            >
+              <section class="implicit-shell">
+                <aside>repo</aside>
+                <div class="implicit-row">
+                  <span class="prefix">active</span>
+                  <span class="pmt fixture-value implicit-value" data-truncate>
+                    org/product/platform/packages/client/src/routes/settings/billing/enterprise-contract-history-panel.tsx
+                  </span>
+                  <button type="button">copy</button>
+                </div>
+              </section>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script type="module" src="./stress.ts"></script>
+  </body>
+</html>
